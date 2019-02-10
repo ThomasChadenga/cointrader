@@ -46,24 +46,33 @@ public class CoinTrader {
 
     public static void main(String[] args) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, IOException {
 
-        //Insert your secret key:
+    	//insert your api key
+    	Scanner enterApi = new Scanner(System.in); 
+    	
+    	System.out.println("Paste your api key: ");
+    	
+    	String apiKey = enterApi.next(); 
+    	
+    	//Insert your secret key:
     	Scanner enterSecret = new Scanner(System.in); 
     	
     	System.out.println("Paste your secret key: ");
     	
     	String secretKey = enterSecret.next(); 
     	
+    	enterApi.close();
+    	
     	enterSecret.close();
     	
-    	//apiKey
-        String apiKey = "iGZVL5AN2GzLcLcNmtvvLDQiiyV74eXlcnOAh4yWjbaHI0giMYfnEl2BxzZdlYjS";
-        
         int BTCWalletID = 0;
 
         //my wallets list
-        System.out.println("WALLETS:");
+        
+        System.out.println();
         
         final JSONArray wallets = new JSONArray(getEndpoint(apiKey, secretKey,"/api/wallet"));
+        
+        System.out.println("WALLETS:");
         
         for(int i=0;i<wallets.length();i++) {
         	
@@ -97,6 +106,10 @@ public class CoinTrader {
 	        
 	        }
 	        
+        }else {
+        	
+        	System.out.println("There are no transactions currently.");
+        	
         }
         
         System.out.println();
@@ -149,8 +162,6 @@ public class CoinTrader {
 
             HttpResponse response = client.execute(request);
 
-            //System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
             String line = "";
@@ -160,8 +171,18 @@ public class CoinTrader {
                 result.append(line);
 
             }
-
-            //System.out.println(result);
+            
+            if (response.getStatusLine().getStatusCode() !=  200) {
+            	
+            	System.out.println("Error Code : " + response.getStatusLine().getStatusCode());
+            	
+            	System.out.println(result);
+            	
+            	System.out.println("Check your login credentials"); 
+            	
+            	System.exit(0);
+            	
+            }
 
         } catch (IOException e) {
 
